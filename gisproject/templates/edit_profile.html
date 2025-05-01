@@ -1,0 +1,50 @@
+<!-- Include in your base or edit_profile.html -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<h2>Edit Profile</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ user_form.as_p }}
+  {{ profile_form.home_address.label_tag }} {{ profile_form.home_address }}
+  {{ profile_form.phone_number.label_tag }} {{ profile_form.phone_number }}
+
+  <!-- Hidden input for location -->
+  <input type="hidden" id="id_location" name="location" value="{{ profile_form.instance.location|default_if_none:'' }}">
+
+  <label for="map">Set Location:</label>
+  <div id="map" style="height: 400px;"></div>
+
+  <button type="submit">Save Changes</button>
+</form>
+
+<script>
+  const map = L.map('map').setView([0, 0], 2);
+
+  // Add tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // If location exists, center on it
+  const initialLocation = "{{ profile_form.instance.location|default_if_none:'' }}";
+  let marker;
+
+  if (initialLocation) {
+      const [lng, lat] = initialLocation.replace("POINT(", "").replace(")", "").split(" ");
+      const latLng = [parseFloat(lat), parseFloat(lng)];
+      map.setView(latLng, 13);
+      marker = L.marker(latLng, { draggable: true }).addTo(map);
+  } else {
+      marker = L.marker([0, 0], { draggable: true }).addTo(map);
+  }
+
+  marker.on('dragend', function (e) {
+      const pos = marker.getLatLng();
+      document.getElementById("id_location").value = `POINT(${pos.lng} ${pos.lat})`;
+  });
+
+  map.on('click', function (e) {
+      marker.setLatLng(e.latlng);
+      document.getElementById("id_location").value = `POINT(${e.latlng.lng} ${e.latlng.lat})`;
+  });
+</script>

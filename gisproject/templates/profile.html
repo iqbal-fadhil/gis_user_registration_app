@@ -1,0 +1,6 @@
+<h2>User Profile</h2>
+<p>Username: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Home Address: {{ user.userprofile.home_address }}</p>
+<p>Phone: {{ user.userprofile.phone_number }}</p>
+<a href="{% url 'edit_profile' %}">Edit Profile</a>
