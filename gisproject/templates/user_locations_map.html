@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Locations</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<h2>User Profile Locations</h2>
+<div id="map" style="height: 500px;"></div>
+
+<script>
+  const profiles = {{ profiles|safe }};
+
+  const map = L.map('map').setView([0, 0], 2);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  profiles.forEach(profile => {
+      const marker = L.marker([profile.lat, profile.lng])
+          .addTo(map)
+          .bindPopup(profile.user);
+  });
+</script>
+
+</body>
+</html>

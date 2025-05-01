@@ -3,6 +3,26 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import UserForm, UserProfileForm
 
+from django.shortcuts import render
+from .models import UserProfile
+
+def user_locations_map(request):
+    profiles = UserProfile.objects.exclude(location__isnull=True)
+
+    profile_data = [
+        {
+            "user": profile.user.username,
+            "lat": profile.location.y,  # latitude
+            "lng": profile.location.x   # longitude
+        }
+        for profile in profiles
+    ]
+
+    return render(request, 'user_locations_map.html', {
+        'profiles': profile_data
+    })
+
+
 @login_required
 def profile_view(request):
     return render(request, 'profile.html', {'user': request.user})
