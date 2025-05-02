@@ -1,58 +1,84 @@
 <!-- edit_profile.html -->
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <style>
+    #map {
+      height: 400px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
 
 <h2>Edit Profile</h2>
 
 <form method="post">
   {% csrf_token %}
   {{ user_form.as_p }}
-  {{ profile_form.home_address.label_tag }} {{ profile_form.home_address }}
-  {{ profile_form.phone_number.label_tag }} {{ profile_form.phone_number }}
+
+  <p>
+    {{ profile_form.home_address.label_tag }}<br>
+    {{ profile_form.home_address }}
+  </p>
+  <p>
+    {{ profile_form.phone_number.label_tag }}<br>
+    {{ profile_form.phone_number }}
+  </p>
 
   <!-- Hidden input for location -->
-  <input type="hidden" id="id_location" name="location" value="{{ profile_form.instance.location.wkt|default_if_none:'' }}">
+  <input type="hidden" id="id_location" name="location" value="{{ profile_form.instance.location|default_if_none:'' }}">
 
   <label for="map">Set Location:</label>
-  <div id="map" style="height: 400px;"></div>
+  <div id="map"></div>
 
   <button type="submit">Save Changes</button>
 </form>
-
 <script>
   const map = L.map('map').setView([0, 0], 2);
 
-  // Add OpenStreetMap tile layer
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  const initialLocation = "{{ profile_form.instance.location.wkt|escapejs|default_if_none:'' }}";
+  const lat = {{ lat|default:"null" }};
+  const lng = {{ lng|default:"null" }};
 
   let marker;
-
-  if (initialLocation.startsWith("POINT(")) {
-    const coords = initialLocation.replace("POINT(", "").replace(")", "").split(" ");
-    const latLng = [parseFloat(coords[1]), parseFloat(coords[0])]; // [lat, lng]
-    map.setView(latLng, 13);
-    marker = L.marker(latLng, { draggable: true }).addTo(map);
-  } else {
-    marker = L.marker([0, 0], { draggable: true }).addTo(map);
-  }
 
   function updateHiddenInput(latlng) {
     document.getElementById("id_location").value = `POINT(${latlng.lng} ${latlng.lat})`;
   }
 
-  // On drag
-  marker.on('dragend', function (e) {
+  if (lat !== null && lng !== null) {
+    const latLng = [lat, lng];
+    map.setView(latLng, 5);
+    marker = L.marker(latLng, { draggable: true }).addTo(map);
+    updateHiddenInput(marker.getLatLng());
+  } else {
+    const defaultCenter = [-6.200000, 106.816666]; // Jakarta as fallback
+    map.setView(defaultCenter, 5);
+    marker = L.marker(defaultCenter, { draggable: true }).addTo(map);
+    updateHiddenInput(marker.getLatLng());
+  }
+
+  marker.on('dragend', function () {
     updateHiddenInput(marker.getLatLng());
   });
 
-  // On map click
   map.on('click', function (e) {
     marker.setLatLng(e.latlng);
     updateHiddenInput(e.latlng);
   });
 </script>
+
+
+
+</body>
+</html>
+

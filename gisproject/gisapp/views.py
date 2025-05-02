@@ -34,15 +34,15 @@ def edit_profile(request):
     user_form = UserForm(instance=request.user)
     profile = request.user.userprofile
 
-    # Convert GEOS geometry to WKT string
-    if profile.location:
-        profile.location = profile.location.wkt
-
     profile_form = UserProfileForm(instance=profile)
+
+    # Prepare lat/lng for JS map
+    lat = profile.location.y if profile.location else None
+    lng = profile.location.x if profile.location else None
 
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = UserProfileForm(request.POST, instance=request.user.userprofile)
+        profile_form = UserProfileForm(request.POST, instance=profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -52,4 +52,6 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {
         'user_form': user_form,
         'profile_form': profile_form,
+        'lat': lat,
+        'lng': lng,
     })
