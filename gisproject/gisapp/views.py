@@ -56,6 +56,13 @@ def user_locations_map(request):
         'profiles': profile_data
     })
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def custom_logout(request):
+    logout(request)
+    return redirect('login')    
+
 
 @login_required
 def profile_view(request):
