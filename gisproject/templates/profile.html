@@ -1,6 +1,85 @@
-<h2>User Profile</h2>
-<p>Username: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
-<p>Home Address: {{ user.userprofile.home_address }}</p>
-<p>Phone: {{ user.userprofile.phone_number }}</p>
-<a href="{% url 'edit_profile' %}">Edit Profile</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
+  <style>
+    #map {
+      height: 400px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">MyApp</a>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'profile' %}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/">Admin</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Profile Content -->
+<div class="container">
+  <h2>User Profile</h2>
+  <p><strong>Username:</strong> {{ user.username }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Home Address:</strong> {{ user.userprofile.home_address }}</p>
+  <p><strong>Phone:</strong> {{ user.userprofile.phone_number }}</p>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+  const map = L.map('map').setView([0, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const lat = {{ lat|default:"null" }};
+  const lng = {{ lng|default:"null" }};
+  let marker;
+
+  function updateHiddenInput(latlng) {
+    // In profile page this is not used, but retained for consistent logic
+    console.log(`POINT(${latlng.lng} ${latlng.lat})`);
+  }
+
+  if (lat !== null && lng !== null) {
+    const latLng = [lat, lng];
+    map.setView(latLng, 13);
+    marker = L.marker(latLng).addTo(map);
+    updateHiddenInput(marker.getLatLng());
+  } else {
+    const defaultCenter = [-6.2, 106.816666]; // Jakarta fallback
+    map.setView(defaultCenter, 5);
+    marker = L.marker(defaultCenter).addTo(map);
+    updateHiddenInput(marker.getLatLng());
+  }
+</script>
+
+</body>
+</html>

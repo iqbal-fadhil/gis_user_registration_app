@@ -25,9 +25,19 @@ def user_locations_map(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'profile.html', {'user': request.user})
+    user_profile = request.user.userprofile
+    location = user_profile.location
 
-from django.contrib.gis.geos import GEOSGeometry
+    lat, lng = (None, None)
+    if location:
+        lat, lng = location.y, location.x  # GeoDjango stores as (x=lng, y=lat)
+
+    return render(request, 'profile.html', {
+        'user': request.user,
+        'lat': lat,
+        'lng': lng
+    })
+
 
 @login_required
 def edit_profile(request):
