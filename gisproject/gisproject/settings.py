@@ -84,9 +84,9 @@ WSGI_APPLICATION = 'gisproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gisapp_db2',
-        'USER': 'gis_user',
-        'PASSWORD': 'GISgis2025!!',
+        'NAME': 'gis_testing_04_db',
+        'USER': 'gis_testing_user',
+        'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': '5432',
     }

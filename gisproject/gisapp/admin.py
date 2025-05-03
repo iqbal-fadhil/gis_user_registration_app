@@ -1,4 +1,3 @@
-# admin.py
 from django.contrib import admin
 from django.contrib.gis import admin as gis_admin
 from django.contrib.gis.db import models as gis_models
