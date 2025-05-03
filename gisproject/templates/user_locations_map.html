@@ -61,7 +61,11 @@
   profiles.forEach(profile => {
       const marker = L.marker([profile.lat, profile.lng])
           .addTo(map)
-          .bindPopup(profile.user);
+          .bindPopup(`
+              <strong>${profile.user}</strong><br>
+              Address: ${profile.home_address}<br>
+              Phone: ${profile.phone_number}
+          `);
   });
 </script>
 

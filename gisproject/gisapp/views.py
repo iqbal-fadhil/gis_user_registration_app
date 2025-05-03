@@ -46,7 +46,9 @@ def user_locations_map(request):
         {
             "user": profile.user.username,
             "lat": profile.location.y,  # latitude
-            "lng": profile.location.x   # longitude
+            "lng": profile.location.x,   # longitude
+            "home_address": profile.home_address,
+            "phone_number": profile.phone_number
         }
         for profile in profiles
     ]
