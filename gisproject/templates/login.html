@@ -1,50 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Login</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'base.html' %}
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">MyApp</a>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">Register</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/">Admin</a>
-        </li>
-      </ul>
-    </div>
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="POST" action="{% url 'login' %}">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="id_username">Username</label>
+    <input type="text" name="username" id="id_username" class="form-control" required>
   </div>
-</nav>
-
-<div class="container mt-4">
-    <h2>Login</h2>
-    <form method="POST" action="{% url 'login' %}">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="id_username">Username</label>
-        <input type="text" name="username" id="id_username" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="id_password">Password</label>
-        <input type="password" name="password" id="id_password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-</div>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+  <div class="form-group">
+    <label for="id_password">Password</label>
+    <input type="password" name="password" id="id_password" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+{% endblock %}
