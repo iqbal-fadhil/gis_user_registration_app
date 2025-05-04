@@ -113,6 +113,61 @@ pip install -r requirements.txt
    ```
    http://localhost:8000/register/
    ```
+---
+
+
+## 🧪 How to Test the App
+
+### ✅ Functional Test via Browser
+
+1. **Register a new user**
+
+   * Visit `http://localhost:8000/register/`
+   * Fill in the form and submit
+   * The user will automatically be:
+
+     * Logged in
+     * Assigned `is_staff=True` so they can access the Django admin
+     * Redirected to home page
+
+2. **Edit Profile**
+
+   * Go to `http://localhost:8000/profile/edit/`
+   * Update your home address, phone number, and choose your location on the map
+
+3. **View Profile**
+
+   * Go to `http://localhost:8000/profile/` to see your profile data
+
+4. **Log out and log back in**
+
+   * Log out at `http://localhost:8000/logout/`
+   * Log in again at `http://localhost:8000/login/`
+
+---
+
+## 🔐 Admin Dashboard Access
+
+All users registered via the site are now created as **staff** users and can log into the Django admin panel.
+ 
+* Go to `http://localhost:8000/admin/`
+* Login with your user credentials
+
+### 🎯 Admin Permissions
+
+* **Regular staff users** (registered via the site):
+
+  * Can access Django admin
+  * Can view and edit **only their own** `UserProfile` entry
+  * Cannot see or modify other users' profiles
+
+* **Superusers** (created via `createsuperuser`):
+
+  * Can view and edit **all** `UserProfile` entries
+  * Have full control over the Django admin dashboard
+
+---
+
 
 ---
 
