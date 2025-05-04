@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>{% block title %}MyApp{% endblock %}</title>
+    <title>{% block title %}GIS User Registration App{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     {% block extra_head %}{% endblock %}
@@ -14,7 +14,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">MyApp</a>
+    <a class="navbar-brand" href="/">GIS User Registration App</a>
     <div class="collapse navbar-collapse justify-content-end">
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
@@ -32,6 +32,9 @@
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}">Register</a>
         </li>
         {% endif %}
       </ul>
